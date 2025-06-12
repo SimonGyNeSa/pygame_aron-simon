@@ -38,6 +38,7 @@ rectb = pygame.transform.scale(rectb,(35,150))
 rect2b = pygame.transform.scale(rect2b,(35,150))
 orangeRect = orange.get_rect()
 
+
 clock = pygame.time.Clock()
 
 orangeRect.x, orangeRect.y = 400, 70
@@ -50,6 +51,10 @@ dt = 0
 hub = pygame.Rect(0, 0, 1920, 75)
 #hubRect = hub.get_rect()
 
+
+
+    
+    
 punkte_p1 = 0
 punkte_p2 = 0
 
@@ -57,12 +62,15 @@ font_large = pygame.font.SysFont("Noteworthy", 72)
 font = pygame.font.SysFont("Noteworthy", 60)
 font_small = pygame.font.SysFont(None, 40)
 
-player01 = font.render("Player 1 = ,", False, BLUE)
-player02 = font.render("Player 2", False, BLUE)
 
+playerScored = 0
 showball = True
 running = True
 while running:
+    t1 = "Player 1:  "+ str(punkte_p1)
+    t2 = "Player 1:  "+ str(punkte_p2)
+    player01 = font.render(t1, False, WHITE)
+    player02 = font.render(t2, False, WHITE)
     screen.fill(WHITE)
     screen.blit(background1, (0, 0))
     
@@ -82,7 +90,7 @@ while running:
         if showball:
             ballback = time.time()
         showball = False
-        punkte_p1 = +1
+        playerScored = 1
 
 
     if orangeRect.y <= 70:
@@ -91,8 +99,8 @@ while running:
     if orangeRect.x <= 0:
         if showball:
             ballback = time.time()
-        showball = False 
-        punkte_p2 = +1
+        showball = False
+        playerScored = 2
         
 
 
@@ -103,15 +111,15 @@ while running:
     screen.blit(rect2b,(1400,rect2.y))
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w]:
-        rect.y -= 60 * dt
+        rect.y -= 90 * dt
         screen.blit(rectb,(100,rect.y))
     if keys[pygame.K_s]:
-        rect.y += 60 * dt
+        rect.y += 90 * dt
 
     if keys[pygame.K_UP]:
-        rect2.y -= 60 * dt
+        rect2.y -= 90 * dt
     if keys[pygame.K_DOWN]:
-        rect2.y += 60 * dt
+        rect2.y += 90 * dt
 
     if orangeRect.colliderect(rect):
         movementx = movementx * -1
@@ -130,11 +138,22 @@ while running:
         orangeRect.y = 70
         movementx = movementx * (-1)
         movementy = 2
+        if playerScored == 1:
+            punkte_p1 += 1
+            playerScored = 0
+        if playerScored == 2:
+            punkte_p2 += 1
+            playerScored = 0
+            
+            if punkte_p1 == 10:
+                running = False
+            if punkte_p2 == 10:
+                running = False
     
     pygame.draw.rect(screen, GREY, hub)
 
     screen.blit(player01,(50, 30))
-    screen.blit(player02,(1300, 30))
+    screen.blit(player02,(1250, 30))
 
     pygame.display.flip()
-    dt = clock.tick(300) / 100
+    dt = clock.tick(450) / 100
