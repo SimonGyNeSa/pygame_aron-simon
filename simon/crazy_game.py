@@ -1,16 +1,18 @@
-import pygame, random, os
+import pygame, random, os, time
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 pygame.init()
 screensize = (600, 600)
 BLACK = (0, 0, 0)
 
- 
+font = pygame.font.SysFont(None, 48)
+
+dogecoin = 250
 
 spawn_orte = [
-    (170, 150), (270, 150), (370, 150),
-    (170, 250), (270, 250), (370, 250),
-    (170, 350), (270, 350), (370, 350)
+    (160, 150), (260, 150), (360, 150),
+    (160, 250), (260, 250), (360, 250),
+    (160, 350), (260, 350), (360, 350)
 ]
 
 # Früchte laden und skalieren
@@ -56,8 +58,8 @@ def spawn_fruits():
         ausgewählt = random.choice(local_spawn_orte)
         local_spawn_orte.remove(ausgewählt)
         fruits_local.append((furcht_die_spawnt, ausgewählt))
-
         number += 1
+
     return fruits_local
 
 running = True
@@ -71,10 +73,25 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 fruits = spawn_fruits()  # neue Früchte generieren
+                dogecoin -= 5
 
     # Früchte zeichnen
     for fruit, pos in fruits:
         screen.blit(fruit, pos)
+        if dogecoin >= 0:
+            text_surface = font.render(f"DOGECOIN: {dogecoin}", True, (255, 255, 255))
+            screen.blit(text_surface, (50, 50))
+    
+    if dogecoin <= 0:
+        link_text = "Alle Dogecoin verzockt"
+        texttext = font.render(link_text, True, (255, 255, 255))
+        screen.fill(BLACK)
+        screen.blit(texttext, (50, 160))
+        link_text = "https://gluecksspielsucht-nrw.de/"
+        texttext = font.render(link_text, True, (255, 255, 255))
+        screen.blit(texttext, (50, 260))
+
+        #hier ist ein kleiner cheat eingbaut
 
     pygame.display.flip()
     clock.tick(30)
@@ -82,4 +99,3 @@ while running:
 pygame.quit()
 
 import pygame
-
