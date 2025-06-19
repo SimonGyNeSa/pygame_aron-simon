@@ -1,5 +1,6 @@
-import pygame, random, os, time
+import pygame, random, os
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
+import time
 
 pygame.init()
 screensize = (600, 600)
@@ -15,7 +16,7 @@ spawn_orte = [
     (160, 350), (260, 350), (360, 350)
 ]
 
-# Früchte laden und skalieren
+
 bild1 = pygame.image.load("strawberry.png")
 bild2 = pygame.image.load("lemon.png")
 bild3 = pygame.image.load("plum.png")
@@ -33,34 +34,49 @@ scaled_bild6 = pygame.transform.scale(bild6, (70, 70))
 screen = pygame.display.set_mode(screensize)
 clock = pygame.time.Clock()
 
-fruits = []  # globale Liste der Früchte, die gezeichnet werden
+fruits = []
 
 def spawn_fruits():
     local_spawn_orte = spawn_orte.copy()
     fruits_local = []
     number = 0
 
+
+    f1 = 0
+    f2 = 0
+    f3 = 0
+    f4 = 0 
+    f5 = 0
+    f6 = 0
+
     while number < 9 and local_spawn_orte:
         zahl = random.randint(0, 36)
-        if 0 <= zahl <= 8:
+
+        if 0 <= zahl <= 8: 
             furcht_die_spawnt = scaled_bild1
+            f6 += 1
         elif 9 <= zahl <= 18:
             furcht_die_spawnt = scaled_bild2
+            f5 += 1
         elif 19 <= zahl <= 28:
             furcht_die_spawnt = scaled_bild3
+            f4 += 1
         elif 29 <= zahl <= 34:
             furcht_die_spawnt = scaled_bild4
+            f3 += 1
         elif 35 <= zahl <= 35:
             furcht_die_spawnt = scaled_bild5
+            f2 += 1
         elif zahl == 36:
             furcht_die_spawnt = scaled_bild6
+            f1 += 1
         
         ausgewählt = random.choice(local_spawn_orte)
         local_spawn_orte.remove(ausgewählt)
         fruits_local.append((furcht_die_spawnt, ausgewählt))
         number += 1
 
-    return fruits_local
+    return fruits_local, f1, f2, f3, f4, f5, f6
 
 running = True
 while running:
@@ -72,15 +88,42 @@ while running:
         
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
-                fruits = spawn_fruits()  # neue Früchte generieren
                 dogecoin -= 5
+                fruits, f1, f2, f3, f4, f5, f6 = spawn_fruits()
 
-    # Früchte zeichnen
+                if f1 == 3 or f2 == 3 or f3 == 3 or f4 == 3 or f5 == 3 or f6 == 3:
+                    dogecoin += 2
+                    text_surface = font.render("+2", True, (255, 255, 255))
+                    screen.blit(text_surface, (400, 50))
+                    
+
+                if f1 == 9 or f2 == 9 or f3 == 9 or f4 == 9 or f5 == 9 or f6 == 4:
+                    dogecoin += 6
+                    text_surface = font.render("+6", True, (255, 255, 255))
+                    screen.blit(text_surface, (400, 50))
+
+
+                if f1 == 6 or f2 == 6 or f3 == 6 or f4 == 6 or f5 == 6 or f6 == 6:
+                    dogecoin += 15
+                    text_surface = font.render("+15", True, (255, 255, 255))
+                    screen.blit(text_surface, (400, 50))
+
+                if f1 == 8 or f2 == 8 or f3 == 8 or f4 == 8 or f5 == 8 or f6 == 8:
+                    dogecoin += 50
+                    text_surface = font.render("+50", True, (255, 255, 255))
+                    screen.blit(text_surface, (400, 50))
+
+                if f1 == 9 or f2 == 9 or f3 == 9 or f4 == 9 or f5 == 9 or f6 == 9:
+                    dogecoin += 250
+                    text_surface = font.render("+250", True, (255, 255, 255))
+                    screen.blit(text_surface, (400, 50))
+                
     for fruit, pos in fruits:
         screen.blit(fruit, pos)
-        if dogecoin >= 0:
-            text_surface = font.render(f"DOGECOIN: {dogecoin}", True, (255, 255, 255))
-            screen.blit(text_surface, (50, 50))
+
+    if dogecoin >= 0:
+        text_surface = font.render(f"DOGECOIN: {dogecoin}", True, (255, 255, 255))
+        screen.blit(text_surface, (50, 50))
     
     if dogecoin <= 0:
         link_text = "Alle Dogecoin verzockt"
@@ -91,11 +134,7 @@ while running:
         texttext = font.render(link_text, True, (255, 255, 255))
         screen.blit(texttext, (50, 260))
 
-        #hier ist ein kleiner cheat eingbaut
-
     pygame.display.flip()
-    clock.tick(30)
+    clock.tick(8)
 
 pygame.quit()
-
-import pygame
