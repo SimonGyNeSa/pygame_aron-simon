@@ -6,8 +6,14 @@ pygame.init()
 screensize = (600, 600)
 BLACK = (0, 0, 0)
 
-font = pygame.font.SysFont(None, 48)
+pygame.mixer.music.load("standart_musik.mp3")
+pygame.mixer.music.play(loops=-1)
+pygame.mixer.music.set_volume(0.2)
 
+font = pygame.font.SysFont(None, 48)
+pleite = pygame.mixer.Sound("sad-ending.wav")
+effect = pygame.mixer.Sound("effect2.wav")
+effect3 = pygame.mixer.Sound("effect3.wav")
 dogecoin = 250
 
 spawn_orte = [
@@ -101,20 +107,24 @@ while running:
                     dogecoin += 6
                     text_surface = font.render("+6", True, (255, 255, 255))
                     screen.blit(text_surface, (400, 50))
-
+                    effect.set_volume(0.5)
+                    effect.play()
 
                 if f1 == 6 or f2 == 6 or f3 == 6 or f4 == 6 or f5 == 6 or f6 == 6:
                     dogecoin += 15
                     text_surface = font.render("+15", True, (255, 255, 255))
                     screen.blit(text_surface, (400, 50))
+                    effect.set_volume(0.5)
+                    effect.play()
 
                 if f1 == 8 or f2 == 8 or f3 == 8 or f4 == 8 or f5 == 8 or f6 == 8:
                     dogecoin += 50
                     text_surface = font.render("+50", True, (255, 255, 255))
                     screen.blit(text_surface, (400, 50))
+                    effect.set_volume(0.5)
+                    effect.play()
 
                 if f1 == 9 or f2 == 9 or f3 == 9 or f4 == 9 or f5 == 9 or f6 == 9:
-                    dogecoin += 250
                     text_surface = font.render("+250", True, (255, 255, 255))
                     screen.blit(text_surface, (400, 50))
                 
@@ -132,8 +142,11 @@ while running:
         screen.blit(texttext, (50, 160))
         link_text = "https://gluecksspielsucht-nrw.de/"
         texttext = font.render(link_text, True, (255, 255, 255))
-        screen.blit(texttext, (50, 260))
-
+        screen.blit(texttext, (50, 300))
+        pygame.mixer.music.set_volume(0.0)
+        pleite.set_volume(0.1)
+        pleite.play()
+        
     pygame.display.flip()
     clock.tick(8)
 
