@@ -5,7 +5,7 @@
 import pygame, random, os
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 import time
-
+auto = False
 pygame.init()
 
 screensize = (600, 600)
@@ -30,7 +30,7 @@ effect3 = pygame.mixer.Sound("effect3.wav")
 
 # --LISTEN UND VARIABELN DEFENIEREN // BILDER LADEN-- #
 fruits = []
-dogecoin = 69
+dogecoin = 690
 counter = 0
 rechteck = pygame.Rect(150, 150, 295, 295)
 variabel = 0
@@ -43,12 +43,13 @@ spawn_orte = [
 ]
 
 new_cursor = pygame.image.load("pointer_c_shaded.png")
-
+autocounter = 0
 ct = 0
-indic = 3
+indic = 1
 gamblecount = 0
 x2 = False
 counterx2 = 0
+spins = 0
 einsatz = 5
 multi = 1
 bild1 = pygame.image.load("strawberry.png")
@@ -181,6 +182,7 @@ while running:
 
             if button_autoplay.is_clicked(event.pos):
                 print("Autoplay gedrückt")
+                auto = True
             if button_2x.is_clicked(event.pos):
                 print("lingangu")
                 counterx2 = 0
@@ -195,6 +197,8 @@ while running:
             if event.key == pygame.K_SPACE:
                 aktuelle_zeit = time.time()
                 counterx2 += 1
+                spins += 1
+                
                 if aktuelle_zeit - letzter_spin_zeit >= 1.00:
                     letzter_spin_zeit = aktuelle_zeit
                     dogecoin -= einsatz
@@ -206,7 +210,7 @@ while running:
                         
                         a = True
 
-                    if f1 == 9 or f2 == 9 or f3 == 9 or f4 == 9 or f5 == 9 or f6 == 4:
+                    if f1 == 4 or f2 == 4 or f3 == 4 or f4 == 4 or f5 == 4 or f6 == 4:
                         dogecoin += 6*multi
 
                         b = True
@@ -229,6 +233,75 @@ while running:
                         dogecoin += 250**multi
 
                         e = True
+
+
+                        
+
+            
+        
+    if auto and autocounter<= 9:
+        autocounter += 1
+
+        aktuelle_zeit = time.time()
+        counterx2 += 1
+        spins += 1
+        
+        if aktuelle_zeit - letzter_spin_zeit >= 0:
+            letzter_spin_zeit = aktuelle_zeit
+            dogecoin -= einsatz
+            fruits, f1, f2, f3, f4, f5, f6 = spawn_fruits()
+
+            if f1 == 3 or f2 == 3 or f3 == 3 or f4 == 3 or f5 == 3 or f6 == 3:
+                dogecoin += 2*multi
+                variabel = 1
+                
+                a = True
+
+            if f1 == 4 or f2 == 4 or f3 == 4 or f4 == 4 or f5 == 4 or f6 == 4:
+                dogecoin += 6*multi
+
+                b = True
+
+            if f1 == 6 or f2 == 6 or f3 == 6 or f4 == 6 or f5 == 6 or f6 == 6:
+                dogecoin += 15*multi
+
+                effect.set_volume(0.25)
+                effect.play()
+                c = True
+
+            if f1 == 8 or f2 == 8 or f3 == 8 or f4 == 8 or f5 == 8 or f6 == 8:
+                dogecoin += 50*multi
+
+                effect3.set_volume(0.25)
+                effect.play()
+                d = True
+
+            if f1 == 9 or f2 == 9 or f3 == 9 or f4 == 9 or f5 == 9 or f6 == 9:
+                dogecoin += 250**multi
+
+                e = True
+
+        for fruit, pos in fruits:
+            screen.blit(fruit, pos)
+    
+        if dogecoin >= 0:
+            text_surface = font.render(f"DOGECOIN: {dogecoin}", True, (BLACK))
+            screen.blit(text_surface, (50, 50))
+        
+        if dogecoin <= 0:
+            link_text = "Alle Dogecoin verzockt"
+            texttext = kleiner_font.render(link_text, True, (BLACK))
+            screen.fill(WHITE)
+            screen.blit(texttext, (40, 160))
+            link_text = "https://gluecksspielsucht-nrw.de/"
+            texttext = kleiner_font.render(link_text, True, (BLACK))
+            screen.blit(texttext, (40, 300))
+            pygame.mixer.music.set_volume(0.0)
+            pleite.set_volume(0.1)
+            pleite.play()
+    else:
+        auto = False
+        autocounter = 0
                     
     if a and ac < indic:
         ac += 1
@@ -268,11 +341,15 @@ while running:
         x2font = font.render("x2",True,BLACK)
         screen.blit(x2font,(screensize[0]-50,50))
 
-    if counterx2 >= 5:
+    if counterx2 >= 10:
         counterx2 = 0
         x2 = False
         multi = 1
         einsatz = 5
+    st = kleiner_font.render(str(f"Spins: {spins}"),True,BLACK)
+    screen.blit(st,(69,100))
+    eint = kleiner_font.render(str(f"Einstaz: {einsatz}"),True,BLACK)
+    screen.blit(eint,(300,100))
 
 
     for fruit, pos in fruits:
@@ -295,6 +372,6 @@ while running:
         pleite.play()
         
     pygame.display.flip()
-    clock.tick(3)
+    clock.tick(1)
 
 pygame.quit()
