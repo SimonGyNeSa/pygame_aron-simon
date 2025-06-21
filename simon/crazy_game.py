@@ -1,27 +1,32 @@
+# --ALLGEMEINE BEFEHLE-- #
 import pygame, random, os
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 import time
-
 pygame.init()
 screensize = (600, 600)
 BLACK = (0, 0, 0)
+screen = pygame.display.set_mode(screensize)
+clock = pygame.time.Clock()
 
+
+# --MUSIK UND TEXT LADEN-- #
 pygame.mixer.music.load("standart_musik.mp3")
 pygame.mixer.music.play(loops=-1)
 pygame.mixer.music.set_volume(0.2)
-
 font = pygame.font.SysFont(None, 48)
 pleite = pygame.mixer.Sound("sad-ending.wav")
 effect = pygame.mixer.Sound("effect2.wav")
 effect3 = pygame.mixer.Sound("effect3.wav")
-dogecoin = 250
 
+
+# --LISTEN UND VARIABELN DEFENIEREN-- #
+fruits = []
+dogecoin = 250
 spawn_orte = [
     (160, 150), (260, 150), (360, 150),
     (160, 250), (260, 250), (360, 250),
     (160, 350), (260, 350), (360, 350)
 ]
-
 
 bild1 = pygame.image.load("strawberry.png")
 bild2 = pygame.image.load("lemon.png")
@@ -37,11 +42,8 @@ scaled_bild4 = pygame.transform.scale(bild4, (70, 70))
 scaled_bild5 = pygame.transform.scale(bild5, (70, 70))
 scaled_bild6 = pygame.transform.scale(bild6, (70, 70))
 
-screen = pygame.display.set_mode(screensize)
-clock = pygame.time.Clock()
 
-fruits = []
-
+# --9x FRÜCHTE UND DEREN SPAWNORTE AUSWÄHLEN-- #
 def spawn_fruits():
     local_spawn_orte = spawn_orte.copy()
     fruits_local = []
@@ -84,6 +86,8 @@ def spawn_fruits():
 
     return fruits_local, f1, f2, f3, f4, f5, f6
 
+
+# --FUNKTION DES PROGRAMMS // BETÄTIGEN WENN LEERTASTE GEDRÜCKT // GEWINN AUSCHÜTTEN // CHECKEN OB SPIELER PLEITE IST-- #
 running = True
 while running:
     screen.fill(BLACK)
