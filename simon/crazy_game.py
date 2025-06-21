@@ -17,7 +17,6 @@ RED = (200, 50, 50)
 screen = pygame.display.set_mode(screensize)
 clock = pygame.time.Clock()
 
-
 # --MUSIK UND TEXT LADEN-- #
 pygame.mixer.music.load("standart_musik.mp3")
 pygame.mixer.music.play(loops=-1)
@@ -47,12 +46,19 @@ new_cursor = pygame.image.load("pointer_c_shaded.png")
 
 ct = 0
 indic = 3
+gamblecount = 0
+x2 = False
+counterx2 = 0
+einsatz = 5
+multi = 1
 bild1 = pygame.image.load("strawberry.png")
 bild2 = pygame.image.load("lemon.png")
 bild3 = pygame.image.load("plum.png")
 bild4 = pygame.image.load("banana.png")
 bild5 = pygame.image.load("watermelon.png")
 bild6 = pygame.image.load("coconut.png")
+hintergrund = pygame.image.load("hintergrund.webp")
+
 
 scaled_bild1 = pygame.transform.scale(bild1, (70, 70))
 scaled_bild2 = pygame.transform.scale(bild2, (70, 70))
@@ -60,6 +66,8 @@ scaled_bild3 = pygame.transform.scale(bild3, (70, 70))
 scaled_bild4 = pygame.transform.scale(bild4, (70, 70))
 scaled_bild5 = pygame.transform.scale(bild5, (70, 70))
 scaled_bild6 = pygame.transform.scale(bild6, (70, 70))
+hintergrund = pygame.transform.scale(hintergrund, (900, 600))
+
 
 gewinn2 = pygame.image.load("2.png")
 gewinn6 = pygame.image.load("6.png")
@@ -67,6 +75,7 @@ gewinn15 = pygame.image.load("15.png")
 gewinn25 = pygame.image.load("25.png")
 gewinn50 = pygame.image.load("50.png")
 gewinn250 = pygame.image.load("250.png")
+
 
 
 a = False
@@ -156,6 +165,7 @@ button_2x = Button("2x", 300, 500, 210, 65, RED, WHITE)
 running = True
 while running:
     screen.fill(WHITE)
+    screen.blit(hintergrund,(-200,0))
     cursor = pygame.cursors.Cursor((0,0), new_cursor)
     pygame.mouse.set_cursor(cursor)
     pygame.draw.rect(screen, BLACK, rechteck, 4, border_radius=10)
@@ -164,7 +174,6 @@ while running:
     button_2x.draw(screen)
 
     for event in pygame.event.get():
-
         if event.type == pygame.QUIT:
             running = False
 
@@ -173,43 +182,51 @@ while running:
             if button_autoplay.is_clicked(event.pos):
                 print("Autoplay gedrückt")
             if button_2x.is_clicked(event.pos):
-                print("2x gedrückt")
+                print("lingangu")
+                counterx2 = 0
+                x2 = True
+                einsatz = 10
+                multi = 2
+
+            
+        
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 aktuelle_zeit = time.time()
+                counterx2 += 1
                 if aktuelle_zeit - letzter_spin_zeit >= 1.00:
                     letzter_spin_zeit = aktuelle_zeit
-                    dogecoin -= 5
+                    dogecoin -= einsatz
                     fruits, f1, f2, f3, f4, f5, f6 = spawn_fruits()
 
                     if f1 == 3 or f2 == 3 or f3 == 3 or f4 == 3 or f5 == 3 or f6 == 3:
-                        dogecoin += 2
+                        dogecoin += 2*multi
                         variabel = 1
                         
                         a = True
 
                     if f1 == 9 or f2 == 9 or f3 == 9 or f4 == 9 or f5 == 9 or f6 == 4:
-                        dogecoin += 6
+                        dogecoin += 6*multi
 
                         b = True
 
                     if f1 == 6 or f2 == 6 or f3 == 6 or f4 == 6 or f5 == 6 or f6 == 6:
-                        dogecoin += 15
+                        dogecoin += 15*multi
 
                         effect.set_volume(0.25)
                         effect.play()
                         c = True
 
                     if f1 == 8 or f2 == 8 or f3 == 8 or f4 == 8 or f5 == 8 or f6 == 8:
-                        dogecoin += 50
+                        dogecoin += 50*multi
 
                         effect3.set_volume(0.25)
                         effect.play()
                         d = True
 
                     if f1 == 9 or f2 == 9 or f3 == 9 or f4 == 9 or f5 == 9 or f6 == 9:
-                        dogecoin += 250
+                        dogecoin += 250**multi
 
                         e = True
                     
@@ -247,6 +264,15 @@ while running:
     if ec >= indic:
         e = False
         ec = 0
+    if x2 == True:
+        x2font = font.render("x2",True,BLACK)
+        screen.blit(x2font,(screensize[0]-50,50))
+
+    if counterx2 >= 5:
+        counterx2 = 0
+        x2 = False
+        multi = 1
+        einsatz = 5
 
 
     for fruit, pos in fruits:
