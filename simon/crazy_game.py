@@ -5,7 +5,9 @@
 import pygame, random, os
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 import time
+
 pygame.init()
+
 screensize = (600, 600)
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -32,6 +34,8 @@ fruits = []
 dogecoin = 250
 counter = 0
 rechteck = pygame.Rect(150, 150, 295, 295)
+variabel = 0
+letzter_spin_zeit = 0  # Zeitpunkt des letzten Spins
 
 spawn_orte = [
     (160, 160), (260, 160), (360, 160),
@@ -55,13 +59,25 @@ scaled_bild4 = pygame.transform.scale(bild4, (70, 70))
 scaled_bild5 = pygame.transform.scale(bild5, (70, 70))
 scaled_bild6 = pygame.transform.scale(bild6, (70, 70))
 
+gewinn2 = pygame.image.load("2.png")
+gewinn6 = pygame.image.load("6.png")
+gewinn15 = pygame.image.load("15.png")
+gewinn25 = pygame.image.load("25.png")
+gewinn50 = pygame.image.load("50.png")
+gewinn250 = pygame.image.load("250.png")
+
+scaled_gewinn2 = pygame.transform.scale(gewinn2, (129, 70))
+scaled_gewinn6 = pygame.transform.scale(gewinn6, (129, 70))
+scaled_gewinn15 = pygame.transform.scale(gewinn15, (129, 70))
+scaled_gewinn25 = pygame.transform.scale(gewinn25, (129, 70))
+scaled_gewinn50 = pygame.transform.scale(gewinn50, (129, 70))
+scaled_gewinn250 = pygame.transform.scale(gewinn250, (129, 70))
 
 # --9x FRÜCHTE UND DEREN SPAWNORTE AUSWÄHLEN-- #
 def spawn_fruits():
     local_spawn_orte = spawn_orte.copy()
     fruits_local = []
     number = 0
-
 
     f1 = 0
     f2 = 0
@@ -144,43 +160,41 @@ while running:
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
-                dogecoin -= 5
-                fruits, f1, f2, f3, f4, f5, f6 = spawn_fruits()
+                aktuelle_zeit = time.time()
+                if aktuelle_zeit - letzter_spin_zeit >= 0.6:
+                    letzter_spin_zeit = aktuelle_zeit
+                    dogecoin -= 5
+                    fruits, f1, f2, f3, f4, f5, f6 = spawn_fruits()
 
-                if f1 == 3 or f2 == 3 or f3 == 3 or f4 == 3 or f5 == 3 or f6 == 3:
-                    dogecoin += 2
-                    text_surface = font.render("+2", True, (BLACK))
-                    screen.blit(text_surface, (450, 50))
-                    
+                    if f1 == 3 or f2 == 3 or f3 == 3 or f4 == 3 or f5 == 3 or f6 == 3:
+                        dogecoin += 2
+                        variabel = 1
+                        screen.blit(scaled_gewinn2, (390, 50))
 
-                if f1 == 9 or f2 == 9 or f3 == 9 or f4 == 9 or f5 == 9 or f6 == 4:
-                    dogecoin += 6
-                    text_surface = font.render("+6", True, (BLACK))
-                    screen.blit(text_surface, (450, 50))
-                    effect.set_volume(0.5)
-                    effect.play()
+                    if f1 == 9 or f2 == 9 or f3 == 9 or f4 == 9 or f5 == 9 or f6 == 4:
+                        dogecoin += 6
+                        screen.blit(scaled_gewinn6, (390, 50))
 
-                if f1 == 6 or f2 == 6 or f3 == 6 or f4 == 6 or f5 == 6 or f6 == 6:
-                    dogecoin += 15
-                    text_surface = font.render("+15", True, (BLACK))
-                    screen.blit(text_surface, (450, 50))
-                    effect.set_volume(0.5)
-                    effect.play()
+                    if f1 == 6 or f2 == 6 or f3 == 6 or f4 == 6 or f5 == 6 or f6 == 6:
+                        dogecoin += 15
+                        screen.blit(scaled_gewinn15, (390, 50))
+                        effect.set_volume(0.25)
+                        effect.play()
 
-                if f1 == 8 or f2 == 8 or f3 == 8 or f4 == 8 or f5 == 8 or f6 == 8:
-                    dogecoin += 50
-                    text_surface = font.render("+50", True, (BLACK))
-                    screen.blit(text_surface, (450, 50))
-                    effect.set_volume(0.5)
-                    effect.play()
+                    if f1 == 8 or f2 == 8 or f3 == 8 or f4 == 8 or f5 == 8 or f6 == 8:
+                        dogecoin += 50
+                        screen.blit(scaled_gewinn50, (390, 50))
+                        effect3.set_volume(0.25)
+                        effect.play()
 
-                if f1 == 9 or f2 == 9 or f3 == 9 or f4 == 9 or f5 == 9 or f6 == 9:
-                    text_surface = font.render("+250", True, (BLACK))
-                    screen.blit(text_surface, (450, 50))
+                    if f1 == 9 or f2 == 9 or f3 == 9 or f4 == 9 or f5 == 9 or f6 == 9:
+                        dogecoin += 250
+                        screen.blit(scaled_gewinn250, (390, 50))
+
                 
     for fruit, pos in fruits:
         screen.blit(fruit, pos)
-
+ 
     if dogecoin >= 0:
         text_surface = font.render(f"DOGECOIN: {dogecoin}", True, (BLACK))
         screen.blit(text_surface, (50, 50))
@@ -198,6 +212,6 @@ while running:
         pleite.play()
         
     pygame.display.flip()
-    clock.tick(144)
+    clock.tick(3)
 
 pygame.quit()
