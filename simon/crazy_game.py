@@ -1,10 +1,17 @@
-# --ALLGEMEINE BEFEHLE-- #
+# --HINWEIS: EINFACH LEERTASTE DRÜCKEN // EINMAL KOSTET 5 DOGECOIN-- #
+
+
+# # --ALLGEMEINE BEFEHLE-- #
 import pygame, random, os
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 import time
 pygame.init()
 screensize = (600, 600)
+WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
+BLUE = (50, 130, 230)
+DARK_BLUE = (30, 100, 200)
+RED = (200, 50, 50)
 screen = pygame.display.set_mode(screensize)
 clock = pygame.time.Clock()
 
@@ -13,20 +20,26 @@ clock = pygame.time.Clock()
 pygame.mixer.music.load("standart_musik.mp3")
 pygame.mixer.music.play(loops=-1)
 pygame.mixer.music.set_volume(0.2)
-font = pygame.font.SysFont(None, 48)
+font = pygame.font.SysFont('Comic Sans MS', 40, bold=True)
+kleiner_font = pygame.font.SysFont('Comic Sans MS', 30, bold=True)
 pleite = pygame.mixer.Sound("sad-ending.wav")
 effect = pygame.mixer.Sound("effect2.wav")
 effect3 = pygame.mixer.Sound("effect3.wav")
 
 
-# --LISTEN UND VARIABELN DEFENIEREN-- #
+# --LISTEN UND VARIABELN DEFENIEREN // BILDER LADEN-- #
 fruits = []
 dogecoin = 250
+counter = 0
+rechteck = pygame.Rect(150, 150, 295, 295)
+
 spawn_orte = [
-    (160, 150), (260, 150), (360, 150),
-    (160, 250), (260, 250), (360, 250),
-    (160, 350), (260, 350), (360, 350)
+    (160, 160), (260, 160), (360, 160),
+    (160, 260), (260, 260), (360, 260),
+    (160, 360), (260, 360), (360, 360)
 ]
+
+new_cursor = pygame.image.load("pointer_c_shaded.png")
 
 bild1 = pygame.image.load("strawberry.png")
 bild2 = pygame.image.load("lemon.png")
@@ -86,16 +99,49 @@ def spawn_fruits():
 
     return fruits_local, f1, f2, f3, f4, f5, f6
 
+# --FÜGT BUTTONS HINZU-- #
+class Button:
+    def __init__(self, text, x, y, width, height, bg_color, text_color):
+        self.rect = pygame.Rect(x, y, width, height)
+        self.text = text
+        self.bg_color = bg_color
+        self.text_color = text_color
+
+    def draw(self, screen):
+        pygame.draw.rect(screen, self.bg_color, self.rect, border_radius=10)
+        pygame.draw.rect(screen, BLACK, self.rect, width=2, border_radius=10)
+        text_surf = font.render(self.text, True, self.text_color)
+        text_rect = text_surf.get_rect(center=self.rect.center)
+        screen.blit(text_surf, text_rect)
+
+    def is_clicked(self, pos):
+        return self.rect.collidepoint(pos)
+
+button_autoplay = Button("Autoplay", 50, 500, 210, 65, BLUE, WHITE)
+button_2x = Button("2x", 300, 500, 210, 65, RED, WHITE)
 
 # --FUNKTION DES PROGRAMMS // BETÄTIGEN WENN LEERTASTE GEDRÜCKT // GEWINN AUSCHÜTTEN // CHECKEN OB SPIELER PLEITE IST-- #
 running = True
 while running:
-    screen.fill(BLACK)
+    screen.fill(WHITE)
+    cursor = pygame.cursors.Cursor((0,0), new_cursor)
+    pygame.mouse.set_cursor(cursor)
+    pygame.draw.rect(screen, BLACK, rechteck, 4, border_radius=10)
+
+    button_autoplay.draw(screen)
+    button_2x.draw(screen)
 
     for event in pygame.event.get():
+
         if event.type == pygame.QUIT:
             running = False
-        
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if button_autoplay.is_clicked(event.pos):
+                print("Autoplay gedrückt")
+            if button_2x.is_clicked(event.pos):
+                print("2x gedrückt")
+
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 dogecoin -= 5
@@ -103,55 +149,55 @@ while running:
 
                 if f1 == 3 or f2 == 3 or f3 == 3 or f4 == 3 or f5 == 3 or f6 == 3:
                     dogecoin += 2
-                    text_surface = font.render("+2", True, (255, 255, 255))
-                    screen.blit(text_surface, (400, 50))
+                    text_surface = font.render("+2", True, (BLACK))
+                    screen.blit(text_surface, (450, 50))
                     
 
                 if f1 == 9 or f2 == 9 or f3 == 9 or f4 == 9 or f5 == 9 or f6 == 4:
                     dogecoin += 6
-                    text_surface = font.render("+6", True, (255, 255, 255))
-                    screen.blit(text_surface, (400, 50))
+                    text_surface = font.render("+6", True, (BLACK))
+                    screen.blit(text_surface, (450, 50))
                     effect.set_volume(0.5)
                     effect.play()
 
                 if f1 == 6 or f2 == 6 or f3 == 6 or f4 == 6 or f5 == 6 or f6 == 6:
                     dogecoin += 15
-                    text_surface = font.render("+15", True, (255, 255, 255))
-                    screen.blit(text_surface, (400, 50))
+                    text_surface = font.render("+15", True, (BLACK))
+                    screen.blit(text_surface, (450, 50))
                     effect.set_volume(0.5)
                     effect.play()
 
                 if f1 == 8 or f2 == 8 or f3 == 8 or f4 == 8 or f5 == 8 or f6 == 8:
                     dogecoin += 50
-                    text_surface = font.render("+50", True, (255, 255, 255))
-                    screen.blit(text_surface, (400, 50))
+                    text_surface = font.render("+50", True, (BLACK))
+                    screen.blit(text_surface, (450, 50))
                     effect.set_volume(0.5)
                     effect.play()
 
                 if f1 == 9 or f2 == 9 or f3 == 9 or f4 == 9 or f5 == 9 or f6 == 9:
-                    text_surface = font.render("+250", True, (255, 255, 255))
-                    screen.blit(text_surface, (400, 50))
+                    text_surface = font.render("+250", True, (BLACK))
+                    screen.blit(text_surface, (450, 50))
                 
     for fruit, pos in fruits:
         screen.blit(fruit, pos)
 
     if dogecoin >= 0:
-        text_surface = font.render(f"DOGECOIN: {dogecoin}", True, (255, 255, 255))
+        text_surface = font.render(f"DOGECOIN: {dogecoin}", True, (BLACK))
         screen.blit(text_surface, (50, 50))
     
     if dogecoin <= 0:
         link_text = "Alle Dogecoin verzockt"
-        texttext = font.render(link_text, True, (255, 255, 255))
-        screen.fill(BLACK)
-        screen.blit(texttext, (50, 160))
+        texttext = kleiner_font.render(link_text, True, (BLACK))
+        screen.fill(WHITE)
+        screen.blit(texttext, (40, 160))
         link_text = "https://gluecksspielsucht-nrw.de/"
-        texttext = font.render(link_text, True, (255, 255, 255))
-        screen.blit(texttext, (50, 300))
+        texttext = kleiner_font.render(link_text, True, (BLACK))
+        screen.blit(texttext, (40, 300))
         pygame.mixer.music.set_volume(0.0)
         pleite.set_volume(0.1)
         pleite.play()
         
     pygame.display.flip()
-    clock.tick(8)
+    clock.tick(144)
 
 pygame.quit()
