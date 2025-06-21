@@ -31,7 +31,7 @@ effect3 = pygame.mixer.Sound("effect3.wav")
 
 # --LISTEN UND VARIABELN DEFENIEREN // BILDER LADEN-- #
 fruits = []
-dogecoin = 250
+dogecoin = 69
 counter = 0
 rechteck = pygame.Rect(150, 150, 295, 295)
 variabel = 0
@@ -45,6 +45,8 @@ spawn_orte = [
 
 new_cursor = pygame.image.load("pointer_c_shaded.png")
 
+ct = 0
+indic = 3
 bild1 = pygame.image.load("strawberry.png")
 bild2 = pygame.image.load("lemon.png")
 bild3 = pygame.image.load("plum.png")
@@ -66,6 +68,19 @@ gewinn25 = pygame.image.load("25.png")
 gewinn50 = pygame.image.load("50.png")
 gewinn250 = pygame.image.load("250.png")
 
+
+a = False
+b = False
+c = False
+d = False
+e = False
+
+ac = 0
+bc = 0
+cc = 0
+dc = 0
+ec = 0
+
 scaled_gewinn2 = pygame.transform.scale(gewinn2, (129, 70))
 scaled_gewinn6 = pygame.transform.scale(gewinn6, (129, 70))
 scaled_gewinn15 = pygame.transform.scale(gewinn15, (129, 70))
@@ -85,6 +100,7 @@ def spawn_fruits():
     f4 = 0 
     f5 = 0
     f6 = 0
+
 
     while number < 9 and local_spawn_orte:
         zahl = random.randint(0, 36)
@@ -153,6 +169,7 @@ while running:
             running = False
 
         if event.type == pygame.MOUSEBUTTONDOWN:
+
             if button_autoplay.is_clicked(event.pos):
                 print("Autoplay gedrückt")
             if button_2x.is_clicked(event.pos):
@@ -161,7 +178,7 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 aktuelle_zeit = time.time()
-                if aktuelle_zeit - letzter_spin_zeit >= 0.6:
+                if aktuelle_zeit - letzter_spin_zeit >= 1.00:
                     letzter_spin_zeit = aktuelle_zeit
                     dogecoin -= 5
                     fruits, f1, f2, f3, f4, f5, f6 = spawn_fruits()
@@ -169,29 +186,69 @@ while running:
                     if f1 == 3 or f2 == 3 or f3 == 3 or f4 == 3 or f5 == 3 or f6 == 3:
                         dogecoin += 2
                         variabel = 1
-                        screen.blit(scaled_gewinn2, (390, 50))
+                        
+                        a = True
 
                     if f1 == 9 or f2 == 9 or f3 == 9 or f4 == 9 or f5 == 9 or f6 == 4:
                         dogecoin += 6
-                        screen.blit(scaled_gewinn6, (390, 50))
+
+                        b = True
 
                     if f1 == 6 or f2 == 6 or f3 == 6 or f4 == 6 or f5 == 6 or f6 == 6:
                         dogecoin += 15
-                        screen.blit(scaled_gewinn15, (390, 50))
+
                         effect.set_volume(0.25)
                         effect.play()
+                        c = True
 
                     if f1 == 8 or f2 == 8 or f3 == 8 or f4 == 8 or f5 == 8 or f6 == 8:
                         dogecoin += 50
-                        screen.blit(scaled_gewinn50, (390, 50))
+
                         effect3.set_volume(0.25)
                         effect.play()
+                        d = True
 
                     if f1 == 9 or f2 == 9 or f3 == 9 or f4 == 9 or f5 == 9 or f6 == 9:
                         dogecoin += 250
-                        screen.blit(scaled_gewinn250, (390, 50))
 
-                
+                        e = True
+                    
+    if a and ac < indic:
+        ac += 1
+        screen.blit(scaled_gewinn2, (390, 50))
+    if ac >= indic:
+        a = False
+        ac = 0
+    
+    if b and bc < indic:
+        bc += 1
+        screen.blit(scaled_gewinn6, (390, 50))
+    if bc >= indic:
+        b = False
+        bc = 0
+    
+    if c and cc < indic:
+        cc += 1
+        screen.blit(scaled_gewinn15, (390, 50))
+    if cc >= indic:
+        c = False
+        cc = 0
+    
+    if d and ac < indic:
+        dc += 1
+        screen.blit(scaled_gewinn50, (390, 50))
+    if dc >= indic:
+        d = False
+        dc = 0
+
+    if e and ac < indic:
+        ec += 1
+        screen.blit(scaled_gewinn250, (390, 50))
+    if ec >= indic:
+        e = False
+        ec = 0
+
+
     for fruit, pos in fruits:
         screen.blit(fruit, pos)
  
